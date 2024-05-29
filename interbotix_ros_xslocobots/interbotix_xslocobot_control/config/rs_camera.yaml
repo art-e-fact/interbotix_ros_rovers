@@ -16,6 +16,7 @@ $(var robot_name):
       initial_reset: $(var rs_camera_initial_reset)
       pointcloud:
         ordered_pc: false
+        stream_filter: 2
       rgb_camera:
         profile: $(var rs_rbg_camera_profile)
       spatial_filter:

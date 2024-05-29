@@ -217,6 +217,8 @@ def launch_setup(context, *args, **kwargs):
             {
                 'publish_tf': True,
                 'pointcloud.enable': rs_camera_pointcloud_enable_launch_arg,
+                'align_depth.enable': 'true',
+
             },
             ParameterFile(
                 param_file=PathJoinSubstitution([
@@ -397,14 +399,14 @@ def generate_launch_description():
     declared_arguments.append(
         DeclareLaunchArgument(
             'rs_rbg_camera_profile',
-            default_value='640,480,30',
+            default_value='1280,720,15',
             description='profile for the rbg camera image stream, in `<width>,<height>,<fps>`.',
         )
     )
     declared_arguments.append(
         DeclareLaunchArgument(
             'rs_depth_module_profile',
-            default_value='640,480,30',
+            default_value='1280,720,15',
             description='profile for the depth module stream, in `<width>,<height>,<fps>`.',
         )
     )
@@ -427,7 +429,7 @@ def generate_launch_description():
     declared_arguments.append(
         DeclareLaunchArgument(
             'rs_camera_align_depth',
-            default_value='false',
+            default_value='true',
             choices=('true', 'false'),
             description=(
                 'whether to publish topics with the depth stream aligned with the color stream.'
