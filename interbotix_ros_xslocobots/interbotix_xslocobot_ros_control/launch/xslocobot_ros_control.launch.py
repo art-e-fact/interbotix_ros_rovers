@@ -39,7 +39,7 @@ from launch.actions import (
     IncludeLaunchDescription,
     OpaqueFunction,
 )
-from launch.conditions import LaunchConfigurationEquals
+from launch.conditions import IfCondition, LaunchConfigurationEquals
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import (
     LaunchConfiguration,
@@ -123,7 +123,7 @@ def launch_setup(context, *args, **kwargs):
         }.items(),
         condition=LaunchConfigurationEquals(
             launch_configuration_name='hardware_type',
-            expected_value='fake'
+            expected_value='isaac'
         ),
     )
 
@@ -133,7 +133,8 @@ def launch_setup(context, *args, **kwargs):
         namespace=robot_name_launch_arg,
         parameters=[
             {
-                'robot_description': ParameterValue(robot_description_launch_arg, value_type=str)
+                'robot_description': ParameterValue(robot_description_launch_arg, value_type=str),
+                'use_sim_time': use_sim_time_param,
             },
             ros2_control_controllers_config_parameter_file,
         ],
@@ -173,9 +174,10 @@ def launch_setup(context, *args, **kwargs):
             f'{robot_name_launch_arg.perform(context)}/controller_manager',
             'joint_state_broadcaster',
         ],
-        condition=LaunchConfigurationEquals(
-            launch_configuration_name='hardware_type',
-            expected_value='fake'
+        condition=IfCondition(
+            PythonExpression(
+                ['"', hardware_type_launch_arg, '"', " in ('fake', 'isaac')"]
+            )
         ),
         output={'both': 'screen'},
     )
