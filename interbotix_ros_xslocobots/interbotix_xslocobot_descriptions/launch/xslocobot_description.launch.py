@@ -85,6 +85,7 @@ def launch_setup(context, *args, **kwargs):
         parameters=[{
             'rate': rate_launch_arg,
             'source_list': source_list_launch_arg,
+            'use_sim_time': use_sim_time_param,
         }],
         output={'both': 'log'},
     )

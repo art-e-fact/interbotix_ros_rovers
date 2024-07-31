@@ -124,7 +124,7 @@
       </xacro:if>
     </xacro:if>
 
-    <xacro:if value="${hardware_type == 'fake'}">
+    <xacro:if value="${hardware_type in ('fake', 'isaac')}">
 
       <joint name="pan">
         <command_interface name="position"/>

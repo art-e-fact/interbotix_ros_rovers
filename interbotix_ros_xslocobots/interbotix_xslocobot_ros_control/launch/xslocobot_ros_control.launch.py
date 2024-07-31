@@ -133,7 +133,8 @@ def launch_setup(context, *args, **kwargs):
         namespace=robot_name_launch_arg,
         parameters=[
             {
-                'robot_description': ParameterValue(robot_description_launch_arg, value_type=str)
+                'robot_description': ParameterValue(robot_description_launch_arg, value_type=str),
+                'use_sim_time': use_sim_time_param,
             },
             ros2_control_controllers_config_parameter_file,
         ],
