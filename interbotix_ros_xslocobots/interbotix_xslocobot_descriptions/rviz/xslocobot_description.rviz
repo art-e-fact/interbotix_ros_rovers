@@ -672,7 +672,7 @@ Visualization Manager:
       Name: Navigation
   Enabled: true
   Global Options:
-    Background Color: 0; 176; 240
+    Background Color: 94; 92; 100
     Fixed Frame: locobot/base_link
     Frame Rate: 30
   Name: root

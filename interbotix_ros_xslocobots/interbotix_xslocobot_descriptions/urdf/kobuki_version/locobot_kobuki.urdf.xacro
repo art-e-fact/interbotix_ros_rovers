@@ -110,7 +110,7 @@
       link="${robot_name}/wheel_left_link"/>
   </joint>
 
-  <xacro:if value="${hardware_type == 'gz_classic'}">
+  <!-- <xacro:if value="${hardware_type == 'gz_classic'}">
     <ros2_control name="wheel_left_joint_controller" type="system">
       <hardware>
         <plugin>gazebo_ros2_control/GazeboSystem</plugin>
@@ -121,7 +121,7 @@
         <command_interface name="velocity" />
       </joint>
     </ros2_control>
-  </xacro:if>
+  </xacro:if> -->
 
   <link name="${robot_name}/wheel_left_link">
     <visual>
@@ -138,6 +138,9 @@
         <cylinder
           length="0.0206"
           radius="0.0352"/>
+        <!-- <cylinder
+          length="0.206"
+          radius="0.352"/> -->
       </geometry>
         <origin
           rpy="0 0 0"
@@ -147,6 +150,7 @@
       <origin
         xyz="0 0 0"/>
       <mass value="0.01"/>
+      <!-- <mass value="0.0001"/> -->
       <inertia
         ixx="0.001"
         ixy="0.0"
@@ -177,7 +181,7 @@
       link="${robot_name}/wheel_right_link"/>
   </joint>
 
-  <xacro:if value="${hardware_type == 'gz_classic'}">
+  <!-- <xacro:if value="${hardware_type == 'gz_classic'}">
     <ros2_control name="wheel_right_joint_controller" type="system">
       <hardware>
         <plugin>gazebo_ros2_control/GazeboSystem</plugin>
@@ -188,7 +192,37 @@
         <command_interface name="velocity" />
       </joint>
     </ros2_control>
-  </xacro:if>
+  </xacro:if> -->
+
+  <!-- <ros2_control name="wheel_right_joint_controller" type="system">
+    <hardware>
+      <plugin>gazebo_ros2_control/GazeboSimSystem</plugin>
+    </hardware>
+    <joint name="wheel_right_joint">
+      <state_interface name="velocity" />
+      <state_interface name="position" />
+      <command_interface name="velocity" />
+    </joint>
+  </ros2_control> -->
+
+  <!-- bach-todo: add if -->
+  <ros2_control name="diffdrive_controller" type="system">
+    <hardware>
+      <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+    </hardware>
+    
+    <joint name="wheel_left_joint">
+      <state_interface name="velocity" />
+      <state_interface name="position" />
+      <command_interface name="velocity" />
+    </joint>
+
+    <joint name="wheel_right_joint">
+      <state_interface name="velocity" />
+      <state_interface name="position" />
+      <command_interface name="velocity" />
+    </joint>
+  </ros2_control>
 
   <link name="${robot_name}/wheel_right_link">
     <visual>
@@ -528,7 +562,7 @@
 
   <gazebo>
     <!-- Gazebo ROS Control -->
-    <xacro:if value="${hardware_type == 'gz_classic'}">
+    <!-- <xacro:if value="${hardware_type == 'gz_classic'}">
       <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
         <ros>
           <namespace>/$(arg robot_name)</namespace>
@@ -543,10 +577,20 @@
       <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
         <parameters> $(find interbotix_xslocobot_sim)/config/kobuki_version/$(arg robot_model)_controllers.yaml </parameters>
       </plugin>
-    </xacro:if>
+    </xacro:if> -->
+
+    <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+      <ros>
+        <namespace>/$(arg robot_name)</namespace>
+      </ros>
+      <!-- <robot_param>robot_description</robot_param>
+      <robot_param_node>robot_state_publisher</robot_param_node> -->
+      <parameters>$(find interbotix_xslocobot_sim)/config/kobuki_version/$(arg robot_model)_controllers.yaml</parameters>
+      <!-- <controller_manager_name>controller_manager</controller_manager_name> -->
+    </plugin>
 
     <!-- Ground truth pose -->
-    <plugin filename="libgazebo_ros_p3d.so" name="p3d_base_controller">
+    <!-- <plugin filename="libgazebo_ros_p3d.so" name="p3d_base_controller">
       <ros>
         <remapping>odom:=sim_ground_truth_pose</remapping>
         <namespace>/$(arg robot_name)</namespace>
@@ -557,7 +601,14 @@
       <xyz_offset>0 0 0</xyz_offset>
       <rpy_offset>0.0 0.0 0.0</rpy_offset>
       <gaussian_noise>0</gaussian_noise>
-    </plugin>
+    </plugin> -->
+
+    <!-- <plugin filename="libgz-sim-pose-publisher-system.so" name="gz::sim::systems::PosePublisher">
+        <publish_link_pose>true</publish_link_pose>
+        <publish_sensor_pose>true</publish_sensor_pose>
+        <use_world_frame>true</use_world_frame>
+    </plugin> -->
+
   </gazebo>
 
 </robot>

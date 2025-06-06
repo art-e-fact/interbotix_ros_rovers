@@ -171,7 +171,7 @@ def generate_launch_description():
     declared_arguments.append(
         DeclareLaunchArgument(
             'rviz_frame',
-            default_value=(LaunchConfiguration('robot_name'), '/base_link'),
+            default_value=(LaunchConfiguration('robot_name'), '/odom'),
             description=(
                 'fixed frame in RViz; this should be changed to `map` or `odom` if '
                 'mapping or using local odometry respectively.'

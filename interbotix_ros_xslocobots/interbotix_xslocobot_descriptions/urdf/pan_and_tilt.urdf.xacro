@@ -81,7 +81,7 @@
         damping="0.1"/>
     </joint>
 
-    <xacro:if value="${hardware_type == 'gz_classic'}">
+    <!-- <xacro:if value="${hardware_type == 'gz_classic'}">
       <ros2_control name="camera_controller" type="system">
         <hardware>
           <plugin>gazebo_ros2_control/GazeboSystem</plugin>
@@ -101,7 +101,28 @@
           <state_interface name="position"/>
         </joint>
       </ros2_control>
-    </xacro:if>
+    </xacro:if> -->
+
+    <!-- bach-todo: add if -->
+    <ros2_control name="camera_controller" type="system">
+      <hardware>
+        <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+      </hardware>
+      <joint name="pan">
+        <command_interface name="position">
+          <param name="min">"${-pi/2}"</param>
+          <param name="max">"${pi/2}"</param>
+        </command_interface>
+        <state_interface name="position"/>
+      </joint>
+      <joint name="tilt">
+        <command_interface name="position">
+          <param name="min">"${-pi/2}"</param>
+          <param name="max">"${radians(75)}"</param>
+        </command_interface>
+        <state_interface name="position"/>
+      </joint>
+    </ros2_control>
 
     <link name="${robot_name}/tilt_link">
       <visual>
@@ -215,7 +236,7 @@
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </link>
 
-    <gazebo reference="camera_${robot_name}_link">
+    <!-- <gazebo reference="camera_${robot_name}_link">
       <sensor name="camera_frame_sensor" type="depth">
         <always_on>true</always_on>
         <update_rate>30.0</update_rate>
@@ -256,6 +277,53 @@
           <focal_length>0</focal_length>
           <hack_baseline>0</hack_baseline>
         </plugin>
+      </sensor>
+    </gazebo> -->
+
+    <gazebo reference="camera_${robot_name}_link">
+      <sensor name="camera_frame_sensor" type="depth">
+        <always_on>true</always_on>
+        <update_rate>30.0</update_rate>
+        <topic>/$(arg robot_name)/color/image_raw</topic>
+        <gz_frame_id>/$(arg robot_name)/camera_depth_link</gz_frame_id>
+        <camera>
+          <camera_info_topic>/$(arg robot_name)/color/camera_info</camera_info_topic>
+          <horizontal_fov>0.994837</horizontal_fov>
+          <image>
+            <format>R8G8B8</format>
+            <width>640</width>
+            <height>480</height>
+          </image>
+          <clip>
+            <near>0.01</near>
+            <far>10</far>
+          </clip>
+        </camera>
+        <!-- <plugin filename="libgazebo_ros_camera.so" name="camera_frame_controller"> -->
+          <!-- <ros>
+            <namespace>/$(arg robot_name)</namespace>
+          </ros> -->
+          <!-- <always_on>true</always_on> -->
+          <!-- <update_rate>0.0</update_rate> -->
+          <!-- <camera_name>camera</camera_name> -->
+          <!-- <image_topic_name>color/image_raw</image_topic_name> -->
+          <!-- <camera_info_topic_name>color/camera_info</camera_info_topic_name> -->
+          <!-- <depth_image_topic_name>aligned_depth_to_color/image_raw</depth_image_topic_name> -->
+          <!-- <depth_image_camera_info_topic_name>aligned_depth_to_color/camera_info</depth_image_camera_info_topic_name> -->
+          <!-- <point_cloud_topic_name>depth_registered/points</point_cloud_topic_name> -->
+          <!-- <frame_name>${robot_name}/camera_depth_link</frame_name> -->
+          <!-- <point_cloud_cutoff>0.01</point_cloud_cutoff>
+          <point_cloud_cutoff_max>10</point_cloud_cutoff_max>
+          <distortion_k1>0.00000001</distortion_k1>
+          <distortion_k2>0.00000001</distortion_k2>
+          <distortion_k3>0.00000001</distortion_k3>
+          <distortion_t1>0.00000001</distortion_t1>
+          <distortion_t2>0.00000001</distortion_t2>
+          <cx>0</cx>
+          <cy>0</cy>
+          <focal_length>0</focal_length>
+          <hack_baseline>0</hack_baseline> -->
+        <!-- </plugin> -->
       </sensor>
     </gazebo>
 

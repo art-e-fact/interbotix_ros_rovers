@@ -142,32 +142,6 @@ def launch_setup(context, *args, **kwargs):
             '--Reg/Strategy 0',
         ]
 
-    # xslocobot_control_launch_include = IncludeLaunchDescription(
-    #     condition=IfCondition(launch_driver_launch_arg),
-    #     launch_description_source=PythonLaunchDescriptionSource([
-    #         PathJoinSubstitution([
-    #             FindPackageShare('interbotix_xslocobot_control'),
-    #             'launch',
-    #             'xslocobot_control.launch.py',
-    #         ])
-    #     ]),
-    #     launch_arguments={
-    #         'robot_model': robot_model_launch_arg,
-    #         'robot_name': robot_name_launch_arg,
-    #         'arm_model': arm_model_launch_arg,
-    #         'use_lidar': use_lidar_launch_arg,
-    #         'use_rviz': use_rviz_launch_arg,
-    #         'use_base_odom_tf': use_base_odom_tf_launch_arg,
-    #         'rviz_frame': 'map',
-    #         'use_camera': 'true',
-    #         'rs_camera_align_depth': 'true',
-    #         'use_base': 'true',
-    #         # 'use_dock': 'true',
-    #         'xs_driver_logging_level': xs_driver_logging_level_launch_arg,
-    #         'use_sim_time': use_sim_time_param,
-    #     }.items(),
-    # )
-    
     xslocobot_control_launch_include = IncludeLaunchDescription(
         condition=IfCondition(launch_driver_launch_arg),
         launch_description_source=PythonLaunchDescriptionSource([
@@ -191,27 +165,9 @@ def launch_setup(context, *args, **kwargs):
             # 'use_dock': 'true',
             'xs_driver_logging_level': xs_driver_logging_level_launch_arg,
             'use_sim_time': use_sim_time_param,
-            'use_sim': 'true',
-            'hardware_type': 'gz_classic'
         }.items(),
     )
 
-    # rtabmap_rgbd_sync_node = Node(
-    #     package='rtabmap_sync',
-    #     executable='rgbd_sync',
-    #     name='rgbd_sync',
-    #     namespace=(robot_name_launch_arg, '/rtabmap'),
-    #     parameters=[{
-    #         'approx_sync': False,
-    #         'use_sim_time': use_sim_time_param,
-    #     }],
-    #     remappings=[
-    #         ('rgb/image', ('/', robot_name_launch_arg,'/camera/color/image_raw')),
-    #         ('depth/image', ('/', robot_name_launch_arg,'/camera/aligned_depth_to_color/image_raw')),
-    #         ('rgb/camera_info', ('/', robot_name_launch_arg,'/camera/color/camera_info')),
-    #     ],
-    #     output={'both': rtabmap_output_location_launch_arg.perform(context)},
-    # )
     rtabmap_rgbd_sync_node = Node(
         package='rtabmap_sync',
         executable='rgbd_sync',
@@ -224,7 +180,6 @@ def launch_setup(context, *args, **kwargs):
         remappings=[
             ('rgb/image', ('/', robot_name_launch_arg,'/camera/color/image_raw')),
             ('depth/image', ('/', robot_name_launch_arg,'/camera/aligned_depth_to_color/image_raw')),
-            # ('depth/image', ('/', robot_name_launch_arg,'/camera/depth/image_rect_raw')),
             ('rgb/camera_info', ('/', robot_name_launch_arg,'/camera/color/camera_info')),
         ],
         output={'both': rtabmap_output_location_launch_arg.perform(context)},

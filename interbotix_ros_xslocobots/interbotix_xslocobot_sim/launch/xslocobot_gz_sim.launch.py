@@ -71,9 +71,10 @@ def launch_setup(context, *args, **kwargs):
 
     # Set ignition resource paths
     gz_resource_path_env_var = SetEnvironmentVariable(
-        name='GAZEBO_RESOURCE_PATH',
+        # name='GAZEBO_RESOURCE_PATH',
+        name='GZ_SIM_RESOURCE_PATH',
         value=[
-            EnvironmentVariable('GAZEBO_RESOURCE_PATH', default_value=''),
+            EnvironmentVariable('GZ_SIM_RESOURCE_PATH', default_value=''),
             ':',
             str(Path(
                 FindPackageShare('interbotix_common_sim').perform(context)
@@ -90,6 +91,7 @@ def launch_setup(context, *args, **kwargs):
         value=[
             EnvironmentVariable('GAZEBO_MODEL_PATH', default_value=''),
             '/usr/share/gazebo-11/models/',
+            # '/home/bachnguyen/.gazebo/models/',
             ':',
             str(Path(
                 FindPackageShare('interbotix_common_sim').perform(context)
@@ -115,7 +117,8 @@ def launch_setup(context, *args, **kwargs):
             ).parent.resolve()),
         ]
     )
-
+    breakpoint()
+    
     # Set GAZEBO_MODEL_URI to empty string to prevent Gazebo from downloading models
     gz_model_uri_env_var = SetEnvironmentVariable(
         name='GAZEBO_MODEL_URI',
@@ -127,33 +130,25 @@ def launch_setup(context, *args, **kwargs):
         name='GAZEBO_MODEL_DATABASE_URI',
         value=['']
     )
-
+    
     gazebo_launch_include = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
             PathJoinSubstitution([
-                FindPackageShare('gazebo_ros'),
+                FindPackageShare('ros_gz_sim'),
                 'launch',
-                'gazebo.launch.py'
+                'gz_sim.launch.py'
             ]),
         ]),
-        launch_arguments={
-            'verbose': use_gazebo_verbose_launch_arg,
-            'world': world_filepath_launch_arg,
-            'pause': start_gazebo_paused_launch_arg,
-            'record': enable_gazebo_recording_launch_arg,
-            'gdb': use_gazebo_debug_launch_arg,
-            'valgrind': use_gazebo_debug_launch_arg,
-            'gui': use_gazebo_gui_launch_arg,
-        }.items(),
+        launch_arguments={'gz_args': ['-r -v4 ', world_filepath_launch_arg], 'on_exit_shutdown': 'true'}.items()
     )
 
     spawn_robot_node = Node(
-        package='gazebo_ros',
-        executable='spawn_entity.py',
+        package='ros_gz_sim',
+        executable='create',
         name='spawn_robot',
         namespace=robot_name_launch_arg,
         arguments=[
-            '-entity', 'robot_description',
+            '-name', 'robot_description',
             '-topic', 'robot_description',
             '-x', '0.0',
             '-y', '0.0',
@@ -277,11 +272,20 @@ def launch_setup(context, *args, **kwargs):
     )
 
     # spawn gripper_controller controller after joint_state_broadcaster is spawned
+    # bach-todo: separate ros2_controller of arm & gripper (currently belong to arm)
     load_gripper_controller_event = RegisterEventHandler(
         event_handler=OnProcessExit(
             target_action=spawn_joint_state_broadcaster_node,
             on_exit=[spawn_gripper_controller_node]
         )
+    )
+    
+    # Bridge
+    bridge = Node(
+        package='ros_gz_bridge',
+        executable='parameter_bridge',
+        arguments=['/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock'],
+        output='screen'
     )
 
     return [
@@ -290,12 +294,13 @@ def launch_setup(context, *args, **kwargs):
         gz_media_path_env_var,
         gz_model_uri_env_var,
         gazebo_launch_include,
+        bridge,
         spawn_robot_node,
+        load_joint_state_broadcaster_event,
         load_diffdrive_controller_event,
         load_camera_controller_event,
-        load_joint_state_broadcaster_event,
         load_arm_controller_event,
-        load_gripper_controller_event,
+        # load_gripper_controller_event,
         xslocobot_description_launch_include,
     ]
 
@@ -355,7 +360,7 @@ def generate_launch_description():
             default_value=PathJoinSubstitution([
                 FindPackageShare('interbotix_xslocobot_sim'),
                 'rviz',
-                'xslocobot_gz_classic.rviz',
+                'xslocobot_gz_sim.rviz',
             ]),
             description='file path to the config file RViz should load.',
         )
@@ -425,6 +430,7 @@ def generate_launch_description():
     declared_arguments.extend(
         declare_interbotix_xslocobot_robot_description_launch_arguments(
             hardware_type='gz_classic',
+            # hardware_type='gz_ignition',
         )
     )
 
