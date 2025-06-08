@@ -6,8 +6,8 @@
         type: joint_state_broadcaster/JointStateBroadcaster
       arm_controller:
         type: joint_trajectory_controller/JointTrajectoryController
-      # gripper_controller:
-      #   type: joint_trajectory_controller/JointTrajectoryController
+      gripper_controller:
+        type: joint_trajectory_controller/JointTrajectoryController
       diffdrive_controller:
         type: diff_drive_controller/DiffDriveController
       camera_controller:
@@ -21,8 +21,6 @@
         - elbow
         - wrist_angle
         - wrist_rotate
-        - left_finger
-        - right_finger
       interface_name: position
       command_interfaces:
         - position
@@ -33,17 +31,17 @@
       constraints:
         stopped_velocity_tolerance: 0.02
         goal_time: 1.0
-  # gripper_controller:
-  #   ros__parameters:
-  #     use_sim_time: True
-  #     joints:
-  #       - left_finger
-  #       - right_finger
-  #     interface_name: position
-  #     command_interfaces:
-  #       - position
-  #     state_interfaces:
-  #       - position
+  gripper_controller:
+    ros__parameters:
+      use_sim_time: True
+      joints:
+        - left_finger
+        - right_finger
+      interface_name: position
+      command_interfaces:
+        - position
+      state_interfaces:
+        - position
   joint_state_broadcaster:
     ros__parameters:
       use_sim_time: True
@@ -66,8 +64,8 @@
       left_wheel_names: ["wheel_left_joint"]
       right_wheel_names: ["wheel_right_joint"]
 
-      wheel_separation: 1.25  #0.230
-      wheel_radius: 0.3 #0.035
+      wheel_separation: 0.230
+      wheel_radius: 0.035
 
       # Multiplier applied to the wheel separation parameter.
       # This is used to account for a difference between the robot model and a real robot.
@@ -88,14 +86,13 @@
       enable_odom_tf: true
 
       cmd_vel_timeout: 0.5
-      use_stamped_vel: false #true
+      use_stamped_vel: false
 
       # Preserve turning radius when limiting speed/acceleration/jerk
       preserve_turning_radius: true
 
       # Publish limited velocity
-      # publish_cmd: true
-      publish_limited_velocity: true
+      publish_cmd: true
 
       # Publish wheel data
       publish_wheel_data: true

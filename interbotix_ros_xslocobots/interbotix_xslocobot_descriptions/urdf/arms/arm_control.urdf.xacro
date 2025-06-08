@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <!-- <ros2_control name="XSHardwareInterface" type="system"> -->
-  <ros2_control name="arm_controller" type="system">
+  <ros2_control name="XSHardwareInterface" type="system">
 
     <hardware>
 
@@ -20,13 +19,10 @@
         <plugin>fake_components/GenericSystem</plugin>
       </xacro:if>
 
-      <!-- If simulating the robot in Gazebo Classic -->
-      <!-- <xacro:if value="${hardware_type == 'gz_classic'}">
-        <plugin>gazebo_ros2_control/GazeboSystem</plugin>
-      </xacro:if> -->
-
-      <!-- bach-todo: add if -->
-      <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+      <!-- If simulating the robot in Gazebo Sim -->
+      <xacro:if value="${hardware_type == 'gz_sim'}">
+        <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+      </xacro:if>
 
     </hardware>
 
