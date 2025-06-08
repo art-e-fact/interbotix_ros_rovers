@@ -62,16 +62,10 @@ def launch_setup(context, *args, **kwargs):
     use_rviz_launch_arg = LaunchConfiguration('use_rviz')
     rviz_config_launch_arg = LaunchConfiguration('rvizconfig')
     world_filepath_launch_arg = LaunchConfiguration('world_filepath')
-    use_gazebo_gui_launch_arg = LaunchConfiguration('use_gazebo_gui')
-    use_gazebo_verbose_launch_arg = LaunchConfiguration('use_gazebo_verbose')
-    use_gazebo_debug_launch_arg = LaunchConfiguration('use_gazebo_debug')
-    start_gazebo_paused_launch_arg = LaunchConfiguration('start_gazebo_paused')
-    enable_gazebo_recording_launch_arg = LaunchConfiguration('enable_gazebo_recording')
     robot_description_launch_arg = LaunchConfiguration('robot_description')
 
     # Set ignition resource paths
     gz_resource_path_env_var = SetEnvironmentVariable(
-        # name='GAZEBO_RESOURCE_PATH',
         name='GZ_SIM_RESOURCE_PATH',
         value=[
             EnvironmentVariable('GZ_SIM_RESOURCE_PATH', default_value=''),
@@ -91,7 +85,6 @@ def launch_setup(context, *args, **kwargs):
         value=[
             EnvironmentVariable('GAZEBO_MODEL_PATH', default_value=''),
             '/usr/share/gazebo-11/models/',
-            # '/home/bachnguyen/.gazebo/models/',
             ':',
             str(Path(
                 FindPackageShare('interbotix_common_sim').perform(context)
@@ -117,7 +110,6 @@ def launch_setup(context, *args, **kwargs):
             ).parent.resolve()),
         ]
     )
-    breakpoint()
     
     # Set GAZEBO_MODEL_URI to empty string to prevent Gazebo from downloading models
     gz_model_uri_env_var = SetEnvironmentVariable(
@@ -139,7 +131,7 @@ def launch_setup(context, *args, **kwargs):
                 'gz_sim.launch.py'
             ]),
         ]),
-        launch_arguments={'gz_args': ['-r -v4 ', world_filepath_launch_arg], 'on_exit_shutdown': 'true'}.items()
+        launch_arguments={'gz_args': ['-r -v3 ', world_filepath_launch_arg], 'on_exit_shutdown': 'true'}.items()
     )
 
     spawn_robot_node = Node(
@@ -429,8 +421,7 @@ def generate_launch_description():
     )
     declared_arguments.extend(
         declare_interbotix_xslocobot_robot_description_launch_arguments(
-            hardware_type='gz_classic',
-            # hardware_type='gz_ignition',
+            hardware_type='gz_sim',
         )
     )
 

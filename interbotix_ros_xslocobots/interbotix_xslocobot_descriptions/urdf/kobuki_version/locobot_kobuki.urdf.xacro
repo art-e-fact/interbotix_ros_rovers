@@ -126,9 +126,6 @@
         <cylinder
           length="0.0206"
           radius="0.0352"/>
-        <!-- <cylinder
-          length="0.206"
-          radius="0.352"/> -->
       </geometry>
         <origin
           rpy="0 0 0"
@@ -138,7 +135,6 @@
       <origin
         xyz="0 0 0"/>
       <mass value="0.01"/>
-      <!-- <mass value="0.0001"/> -->
       <inertia
         ixx="0.001"
         ixy="0.0"
