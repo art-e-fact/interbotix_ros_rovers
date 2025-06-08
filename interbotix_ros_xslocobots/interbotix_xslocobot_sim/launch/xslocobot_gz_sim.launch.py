@@ -264,7 +264,6 @@ def launch_setup(context, *args, **kwargs):
     )
 
     # spawn gripper_controller controller after joint_state_broadcaster is spawned
-    # bach-todo: separate ros2_controller of arm & gripper (currently belong to arm)
     load_gripper_controller_event = RegisterEventHandler(
         event_handler=OnProcessExit(
             target_action=spawn_joint_state_broadcaster_node,
@@ -292,7 +291,7 @@ def launch_setup(context, *args, **kwargs):
         load_diffdrive_controller_event,
         load_camera_controller_event,
         load_arm_controller_event,
-        # load_gripper_controller_event,
+        load_gripper_controller_event,
         xslocobot_description_launch_include,
     ]
 
