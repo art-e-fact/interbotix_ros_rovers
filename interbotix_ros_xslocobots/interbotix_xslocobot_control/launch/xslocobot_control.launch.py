@@ -207,52 +207,31 @@ def launch_setup(context, *args, **kwargs):
         }],
     )
 
-    # rs_camera_node = Node(
-    #     condition=IfCondition(use_camera_launch_arg),
-    #     package='realsense2_camera',
-    #     executable='realsense2_camera_node',
-    #     # namespace=(robot_name_launch_arg, '/camera'),
-    #     namespace=(robot_name_launch_arg),
-    #     name='camera',
-    #     parameters=[
-    #         {
-    #             'publish_tf': True,
-    #             'pointcloud.enable': rs_camera_pointcloud_enable_launch_arg,
-    #         },
-    #         ParameterFile(
-    #             param_file=PathJoinSubstitution([
-    #                 FindPackageShare('interbotix_xslocobot_control'),
-    #                 'config',
-    #                 'rs_camera.yaml'
-    #             ]),
-    #             allow_substs=True,
-    #         ),
-    #     ],
-    #     output=rs_camera_output_location_launch_arg.perform(context),
-    #     arguments=[
-    #         '--ros-args', '--log-level', rs_camera_logging_level_launch_arg.perform(context)
-    #     ],
-    #     emulate_tty=True,
-    # )
-    
-    rs_camera_launch_include = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([
-            PathJoinSubstitution([
-                FindPackageShare('realsense2_camera'),
-                'launch',
-                'rs_launch.py'
-            ])
-        ]),
+    rs_camera_node = Node(
         condition=IfCondition(use_camera_launch_arg),
-        launch_arguments={
-            'camera_namespace': robot_name_launch_arg,
-            'config_file': PathJoinSubstitution([
+        package='realsense2_camera',
+        executable='realsense2_camera_node',
+        namespace=(robot_name_launch_arg, '/camera'),
+        name='camera',
+        parameters=[
+            {
+                'publish_tf': True,
+                'pointcloud.enable': rs_camera_pointcloud_enable_launch_arg,
+            },
+            ParameterFile(
+                param_file=PathJoinSubstitution([
                     FindPackageShare('interbotix_xslocobot_control'),
                     'config',
-                    'rs_camera_1.yaml'
+                    'rs_camera.yaml'
                 ]),
-        }.items()
-        
+                allow_substs=True,
+            ),
+        ],
+        output=rs_camera_output_location_launch_arg.perform(context),
+        arguments=[
+            '--ros-args', '--log-level', rs_camera_logging_level_launch_arg.perform(context)
+        ],
+        emulate_tty=True,
     )
 
     tf_rebroadcaster_launch_include = IncludeLaunchDescription(
@@ -286,8 +265,7 @@ def launch_setup(context, *args, **kwargs):
         kobuki_node,
         rplidar_node,
         sllidar_node,
-        # rs_camera_node,
-        rs_camera_launch_include,
+        rs_camera_node,
         tf_rebroadcaster_launch_include,
     ]
 
