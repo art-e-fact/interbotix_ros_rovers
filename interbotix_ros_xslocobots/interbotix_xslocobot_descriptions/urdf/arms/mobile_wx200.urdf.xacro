@@ -593,7 +593,7 @@
           <dynamics
             friction="0.1"
             damping="0.1"/>
-          <xacro:unless value="${hardware_type == 'gz_classic'}">
+          <xacro:unless value="${hardware_type == 'gz_sim'}">
             <mimic
               joint="left_finger"
               multiplier="-1"

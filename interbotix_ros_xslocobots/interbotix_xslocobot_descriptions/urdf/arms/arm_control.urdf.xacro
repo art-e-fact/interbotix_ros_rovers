@@ -85,7 +85,7 @@
     </xacro:if>
 
     <xacro:if value="$(arg use_gripper)">
-      <xacro:if value="${hardware_type in ('fake', 'gz_classic')}">
+      <xacro:if value="${hardware_type in ('fake', 'gz_sim')}">
         <joint name="gripper">
           <command_interface name="position"/>
           <state_interface name="position"/>
@@ -102,7 +102,7 @@
           <param name="initial_position">0.0195</param>
         </joint>
 
-        <xacro:if value="${hardware_type == 'gz_classic'}">
+        <xacro:if value="${hardware_type == 'gz_sim'}">
           <joint name="right_finger">
             <!-- <param name="mimic">left_finger</param>
             <param name="multiplier">1</param> -->
@@ -162,7 +162,7 @@
         </joint>
 
       </xacro:if> <!-- base_type == 'create3' -->
-    </xacro:if> <!-- hardware_type == 'gz_classic' -->
+    </xacro:if> <!-- hardware_type == 'gz_sim' -->
 
   </ros2_control>
 

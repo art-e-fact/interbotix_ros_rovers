@@ -75,39 +75,12 @@ def launch_setup(context, *args, **kwargs):
             ).parent.resolve()),
             ':',
             str(Path(
-                FindPackageShare('interbotix_xslocobot_descriptions').perform(context)
-            ).parent.resolve()),
-        ]
-    )
-
-    gz_model_path_env_var = SetEnvironmentVariable(
-        name='GAZEBO_MODEL_PATH',
-        value=[
-            EnvironmentVariable('GAZEBO_MODEL_PATH', default_value=''),
-            '/usr/share/gazebo-11/models/',
-            ':',
-            str(Path(
                 FindPackageShare('interbotix_common_sim').perform(context)
-            ).parent.resolve()),
+            ).joinpath('models')),
             ':',
             str(Path(
                 FindPackageShare('interbotix_xslocobot_descriptions').perform(context)
-            ).parent.resolve()),
-        ]
-    )
-
-    gz_media_path_env_var = SetEnvironmentVariable(
-        name='GAZEBO_MEDIA_PATH',
-        value=[
-            EnvironmentVariable('GAZEBO_MEDIA_PATH', default_value=''),
-            ':',
-            str(Path(
-                FindPackageShare('interbotix_common_sim').perform(context)
-            ).parent.resolve()),
-            ':',
-            str(Path(
-                FindPackageShare('interbotix_xslocobot_descriptions').perform(context)
-            ).parent.resolve()),
+            ).parent.resolve())
         ]
     )
     
@@ -281,15 +254,13 @@ def launch_setup(context, *args, **kwargs):
 
     return [
         gz_resource_path_env_var,
-        gz_model_path_env_var,
-        gz_media_path_env_var,
         gz_model_uri_env_var,
         gazebo_launch_include,
         bridge,
         spawn_robot_node,
+        load_joint_state_broadcaster_event,
         load_diffdrive_controller_event,
         load_camera_controller_event,
-        load_joint_state_broadcaster_event,
         load_arm_controller_event,
         load_gripper_controller_event,
         xslocobot_description_launch_include,
