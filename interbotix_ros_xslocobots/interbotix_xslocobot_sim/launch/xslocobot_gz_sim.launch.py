@@ -249,7 +249,7 @@ def launch_setup(context, *args, **kwargs):
     bridge_params = os.path.join(
         get_package_share_directory('interbotix_xslocobot_sim'),
         'params',
-        'xslocobot_bridge.yaml'
+        'locobot_bridge.yaml'
     )
 
     start_gazebo_ros_bridge_cmd = Node(
