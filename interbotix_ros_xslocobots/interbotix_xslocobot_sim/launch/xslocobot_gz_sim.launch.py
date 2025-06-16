@@ -53,6 +53,8 @@ from launch.substitutions import (
 )
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
+from ament_index_python.packages import get_package_share_directory
+import os
 
 
 def launch_setup(context, *args, **kwargs):
@@ -244,19 +246,28 @@ def launch_setup(context, *args, **kwargs):
         )
     )
     
-    # Bridge
-    bridge = Node(
+    bridge_params = os.path.join(
+        get_package_share_directory('interbotix_xslocobot_sim'),
+        'params',
+        'xslocobot_bridge.yaml'
+    )
+
+    start_gazebo_ros_bridge_cmd = Node(
         package='ros_gz_bridge',
         executable='parameter_bridge',
-        arguments=['/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock'],
-        output='screen'
+        arguments=[
+            '--ros-args',
+            '-p',
+            f'config_file:={bridge_params}',
+        ],
+        output='screen',
     )
 
     return [
         gz_resource_path_env_var,
         gz_model_uri_env_var,
         gazebo_launch_include,
-        bridge,
+        start_gazebo_ros_bridge_cmd,
         spawn_robot_node,
         load_joint_state_broadcaster_event,
         load_diffdrive_controller_event,
