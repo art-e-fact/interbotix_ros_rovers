@@ -342,23 +342,23 @@
     </inertial>
   </link>
 
-  <gazebo reference="gyro_link">
+  <gazebo reference="${robot_name}/gyro_link">
     <sensor name="imu" type="imu">
+      <gz_frame_id>${robot_name}/gyro_link</gz_frame_id>
       <always_on>true</always_on>
       <update_rate>50</update_rate>
-      <visualize>false</visualize>
+      <visualize>true</visualize>
+      <topic>imu</topic>
       <imu>
         <noise>
           <type>gaussian</type>
           <rate>
             <mean>0.0</mean>
             <stddev>0.00000196</stddev>
-            <!-- 0.25 x 0.25 (deg/s) -->
             <bias_mean>0.0</bias_mean>
             <bias_stddev>0.0</bias_stddev>
           </rate>
           <accel>
-            <!-- not used in the plugin and real robot, hence using tutorial values -->
             <mean>0.0</mean>
             <stddev>1.7e-2</stddev>
             <bias_mean>0.1</bias_mean>
@@ -533,6 +533,8 @@
       <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
         <ros>
           <namespace>/$(arg robot_name)</namespace>
+          <remapping>/locobot/diffdrive_controller/odom:=/odom</remapping>
+          <remapping>/locobot/diffdrive_controller/cmd_vel_unstamped:=/cmd_vel</remapping>
         </ros>
         <parameters>$(find interbotix_xslocobot_sim)/config/kobuki_version/$(arg robot_model)_controllers.yaml</parameters>
       </plugin>
