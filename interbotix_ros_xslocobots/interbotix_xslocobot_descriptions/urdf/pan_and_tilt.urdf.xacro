@@ -197,34 +197,62 @@
           iyz="0.0000000248"
           izz="0.0000468600"/>
       </inertial>
+
+      <sensor name="camera_sensor" type="camera">
+        <always_on>true</always_on>
+        <visualize>true</visualize>
+        <update_rate>30.0</update_rate>
+        <topic>$(arg robot_name)/camera/image_raw</topic>
+        <gz_frame_id>camera_$(arg robot_name)_link</gz_frame_id>
+        <camera>
+          <camera_info_topic>$(arg robot_name)/camera/camera_info</camera_info_topic>
+          <horizontal_fov>0.994837</horizontal_fov>
+          <image>
+            <format>R8G8B8</format>
+            <width>640</width>
+            <height>480</height>
+          </image>
+          <clip>
+            <near>0.01</near>
+            <far>10</far>
+          </clip>
+        </camera>
+      </sensor>
     </link>
 
     <gazebo reference="camera_${robot_name}_link">
       <material>Gazebo/Grey</material>
       <self_collide>true</self_collide>
-    </gazebo>
 
-    <!-- Adds a dummy link, libgazebo_ros_openni_kinect publishes from frame's z-axis -->
-    <!-- https://github.com/ros-simulation/gazebo_ros_pkgs/issues/243 -->
-    <joint name="camera_depth_joint" type="fixed">
-      <origin rpy="${-pi/2} 0 ${-pi/2}" xyz="0 0 0"/>
-      <parent link="camera_${robot_name}_link"/>
-      <child link="${robot_name}/camera_depth_link"/>
-    </joint>
-    <link name="${robot_name}/camera_depth_link">
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-    </link>
-
-
-
-    <gazebo reference="camera_${robot_name}_link">
-      <sensor name="camera_frame_sensor" type="depth">
+      <sensor name="camera_sensor" type="camera">
         <always_on>true</always_on>
+        <visualize>true</visualize>
         <update_rate>30.0</update_rate>
-        <topic>/$(arg robot_name)/color/image_raw</topic>
-        <gz_frame_id>/$(arg robot_name)/camera_depth_link</gz_frame_id>
+        <topic>$(arg robot_name)/camera/image_raw</topic>
+        <gz_frame_id>camera_$(arg robot_name)_link</gz_frame_id>
         <camera>
-          <camera_info_topic>/$(arg robot_name)/color/camera_info</camera_info_topic>
+          <camera_info_topic>$(arg robot_name)/camera/camera_info</camera_info_topic>
+          <horizontal_fov>0.994837</horizontal_fov>
+          <image>
+            <format>R8G8B8</format>
+            <width>640</width>
+            <height>480</height>
+          </image>
+          <clip>
+            <near>0.01</near>
+            <far>10</far>
+          </clip>
+        </camera>
+      </sensor>
+
+      <sensor name="camera_depth_sensor" type="depth">
+        <always_on>true</always_on>
+        <visualize>true</visualize>
+        <update_rate>30.0</update_rate>
+        <topic>$(arg robot_name)/camera/depth/image_raw</topic>
+        <gz_frame_id>camera_$(arg robot_name)_link</gz_frame_id>
+        <camera>
+          <camera_info_topic>$(arg robot_name)/camera/camera_info</camera_info_topic>
           <horizontal_fov>0.994837</horizontal_fov>
           <image>
             <format>R8G8B8</format>
@@ -242,3 +270,4 @@
   </xacro:macro>
 
 </robot>
+

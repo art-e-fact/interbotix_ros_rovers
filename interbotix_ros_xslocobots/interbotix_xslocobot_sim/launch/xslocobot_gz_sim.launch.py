@@ -66,6 +66,9 @@ def launch_setup(context, *args, **kwargs):
     world_filepath_launch_arg = LaunchConfiguration('world_filepath')
     robot_description_launch_arg = LaunchConfiguration('robot_description')
 
+    # fp = open('tmp.txt','r'); tmp = fp.read(); fp.close()
+    # robot_description_launch_arg = tmp
+
     # Set ignition resource paths
     gz_resource_path_env_var = SetEnvironmentVariable(
         name='GZ_SIM_RESOURCE_PATH',
@@ -263,11 +266,22 @@ def launch_setup(context, *args, **kwargs):
         output='screen',
     )
 
+    start_gazebo_ros_image_bridge_cmd = Node(
+        package='ros_gz_image',
+        executable='image_bridge',
+        arguments=[
+            f'/{robot_name_launch_arg.perform(context)}/camera/image_raw',
+            f'/{robot_name_launch_arg.perform(context)}/camera/depth/image_raw'
+            ],
+        output='screen',
+    )
+
     return [
         gz_resource_path_env_var,
         gz_model_uri_env_var,
         gazebo_launch_include,
         start_gazebo_ros_bridge_cmd,
+        start_gazebo_ros_image_bridge_cmd,
         spawn_robot_node,
         load_joint_state_broadcaster_event,
         load_diffdrive_controller_event,
