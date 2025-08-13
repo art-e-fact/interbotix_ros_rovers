@@ -86,7 +86,7 @@
     </inertial>
   </link>
 
-  <gazebo reference="base_link">
+  <gazebo reference="${robot_name}/base_link">
     <mu1>0.3</mu1>
     <mu2>0.3</mu2>
     <sensor type="contact" name="bumpers">
@@ -94,7 +94,7 @@
       <update_rate>50.0</update_rate>
       <visualize>true</visualize>
       <contact>
-        <collision>base_footprint</collision>
+        <collision>${robot_name}/base_footprint</collision>
       </contact>
     </sensor>
   </gazebo>
@@ -145,7 +145,7 @@
     </inertial>
   </link>
 
-  <gazebo reference="wheel_left_link">
+  <gazebo reference="${robot_name}/wheel_left_link">
     <mu1>1.0</mu1>
     <mu2>1.0</mu2>
     <kp>1000000.0</kp>
@@ -199,7 +199,7 @@
     </inertial>
   </link>
 
-  <gazebo reference="wheel_right_link">
+  <gazebo reference="${robot_name}/wheel_right_link">
     <mu1>1.0</mu1>
     <mu2>1.0</mu2>
     <kp>1000000.0</kp>
@@ -263,7 +263,7 @@
     </inertial>
   </link>
 
-  <gazebo reference="caster_front_link">
+  <gazebo reference="${robot_name}/caster_front_link">
     <mu1>0.0</mu1>
     <mu2>0.0</mu2>
     <kp>1000000.0</kp>
@@ -307,7 +307,7 @@
     </inertial>
   </link>
 
-  <gazebo reference="caster_back_link">
+  <gazebo reference="${robot_name}/caster_back_link">
     <mu1>0.0</mu1>
     <mu2>0.0</mu2>
     <kp>1000000.0</kp>
@@ -394,7 +394,7 @@
     </inertial>
   </link>
 
-  <gazebo reference="cliff_sensor_left_link">
+  <gazebo reference="${robot_name}/cliff_sensor_left_link">
     <sensor name="cliff_sensor_left" type="ray">
       <always_on>true</always_on>
       <update_rate>50</update_rate>
@@ -444,7 +444,7 @@
     </inertial>
   </link>
 
-  <gazebo reference="cliff_sensor_right_link">
+  <gazebo reference="${robot_name}/cliff_sensor_right_link">
     <sensor name="cliff_sensor_right" type="ray">
       <always_on>true</always_on>
       <update_rate>50</update_rate>
@@ -494,7 +494,7 @@
     </inertial>
   </link>
 
-  <gazebo reference="cliff_sensor_front_link">
+  <gazebo reference="${robot_name}/cliff_sensor_front_link">
     <sensor name="cliff_sensor_front" type="ray">
       <always_on>true</always_on>
       <update_rate>50</update_rate>
@@ -540,15 +540,19 @@
       </plugin>
     </xacro:if>
 
-    <!-- Ground truth pose -->
+    <!-- Ground truth odometry -->
+    <!-- ref: https://github.com/dhanushshettigar/Getting-Started-With-ROS2/wiki/Differential-Drive-Robot-Teleop#2-include-the-vehicle-model-in-the-world-file -->
     <xacro:if value="${hardware_type == 'gz_sim'}">
-      <plugin filename="libgz-sim-pose-publisher-system.so" name="gz::sim::systems::PosePublisher">
-          <publish_link_pose>true</publish_link_pose>
-          <publish_sensor_pose>true</publish_sensor_pose>
-          <use_world_frame>true</use_world_frame>
+      <plugin
+        filename="gz-sim-odometry-publisher-system"
+        name="gz::sim::systems::OdometryPublisher">
+        <odom_frame>${robot_name}/base_footprint</odom_frame>
+        <robot_base_frame>${robot_name}/base_footprint</robot_base_frame>
       </plugin>
+
     </xacro:if>
 
   </gazebo>
 
 </robot>
+
