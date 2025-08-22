@@ -52,3 +52,16 @@
   ros_type_name: "sensor_msgs/msg/CameraInfo"
   gz_type_name: "gz.msgs.CameraInfo"
   direction: GZ_TO_ROS
+
+# gz-enhanced-scene-broadcaster
+- ros_topic_name: "/world/default/enhanced_dynamic_pose/info"
+  gz_topic_name: "/world/default/enhanced_dynamic_pose/info"
+  ros_type_name: "geometry_msgs/msg/TransformStamped"
+  gz_type_name: "ignition.msgs.Pose"
+  direction: GZ_TO_ROS
+  
+- ros_topic_name: "/world/default/enhanced_pose/info"
+  gz_topic_name: "/world/default/enhanced_pose/info"
+  ros_type_name: "geometry_msgs/msg/TransformStamped"
+  gz_type_name: "ignition.msgs.Pose"
+  direction: GZ_TO_ROS
