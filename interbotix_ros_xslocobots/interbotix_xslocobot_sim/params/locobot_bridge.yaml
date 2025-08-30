@@ -65,3 +65,10 @@
   ros_type_name: "geometry_msgs/msg/TransformStamped"
   gz_type_name: "ignition.msgs.Pose"
   direction: GZ_TO_ROS
+
+# sky_cam
+- ros_topic_name: "/sky_cam"
+  gz_topic_name: "/sky_cam"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "gz.msgs.Image"
+  direction: GZ_TO_ROS

@@ -197,27 +197,6 @@
           iyz="0.0000000248"
           izz="0.0000468600"/>
       </inertial>
-
-      <sensor name="camera_sensor" type="camera">
-        <always_on>true</always_on>
-        <visualize>true</visualize>
-        <update_rate>30.0</update_rate>
-        <topic>$(arg robot_name)/camera/image_raw</topic>
-        <gz_frame_id>camera_$(arg robot_name)_link</gz_frame_id>
-        <camera>
-          <camera_info_topic>$(arg robot_name)/camera/camera_info</camera_info_topic>
-          <horizontal_fov>0.994837</horizontal_fov>
-          <image>
-            <format>R8G8B8</format>
-            <width>640</width>
-            <height>480</height>
-          </image>
-          <clip>
-            <near>0.01</near>
-            <far>10</far>
-          </clip>
-        </camera>
-      </sensor>
     </link>
 
     <gazebo reference="camera_${robot_name}_link">
