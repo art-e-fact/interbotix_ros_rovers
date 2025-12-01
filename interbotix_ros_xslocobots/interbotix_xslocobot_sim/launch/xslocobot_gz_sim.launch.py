@@ -65,9 +65,7 @@ def launch_setup(context, *args, **kwargs):
     rviz_config_launch_arg = LaunchConfiguration('rvizconfig')
     world_filepath_launch_arg = LaunchConfiguration('world_filepath')
     robot_description_launch_arg = LaunchConfiguration('robot_description')
-
-    # fp = open('tmp.txt','r'); tmp = fp.read(); fp.close()
-    # robot_description_launch_arg = tmp
+    use_gazebo_gui_launch_arg = LaunchConfiguration('use_gazebo_gui')
 
     # Set ignition resource paths
     gz_resource_path_env_var = SetEnvironmentVariable(
@@ -101,6 +99,11 @@ def launch_setup(context, *args, **kwargs):
         value=['']
     )
     
+    if use_gazebo_gui_launch_arg.perform(context).lower() == 'true':
+        gz_args = ['-r -v3 ', world_filepath_launch_arg]
+    else:
+        gz_args = ['-s --headless-rendering -r -v3 ', world_filepath_launch_arg]
+    
     gazebo_launch_include = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
             PathJoinSubstitution([
@@ -109,7 +112,7 @@ def launch_setup(context, *args, **kwargs):
                 'gz_sim.launch.py'
             ]),
         ]),
-        launch_arguments={'gz_args': ['-r -v3 ', world_filepath_launch_arg], 'on_exit_shutdown': 'true'}.items()
+        launch_arguments={'gz_args': gz_args, 'on_exit_shutdown': 'true'}.items()
     )
 
     spawn_robot_node = Node(
