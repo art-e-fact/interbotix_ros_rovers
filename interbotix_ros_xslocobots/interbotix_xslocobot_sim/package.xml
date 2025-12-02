@@ -14,7 +14,7 @@
   <depend>interbotix_common_sim</depend>
   <depend>controller_manager</depend>
   <depend>effort_controllers</depend>
-  <depend>gazebo_ros</depend>
+  <!-- <depend>gazebo_ros</depend> -->
   <depend>gz_ros2_control</depend>
   <depend>joint_trajectory_controller</depend>
   <depend condition="$INTERBOTIX_XSLOCOBOT_BASE_TYPE == create3">irobot_create_gazebo_sim</depend>
