@@ -86,7 +86,7 @@
     </inertial>
   </link>
 
-  <gazebo reference="base_link">
+  <gazebo reference="${robot_name}/base_link">
     <mu1>0.3</mu1>
     <mu2>0.3</mu2>
     <sensor type="contact" name="bumpers">
@@ -94,7 +94,7 @@
       <update_rate>50.0</update_rate>
       <visualize>true</visualize>
       <contact>
-        <collision>base_footprint</collision>
+        <collision>${robot_name}/base_footprint</collision>
       </contact>
     </sensor>
   </gazebo>
@@ -110,18 +110,6 @@
       link="${robot_name}/wheel_left_link"/>
   </joint>
 
-  <xacro:if value="${hardware_type == 'gz_classic'}">
-    <ros2_control name="wheel_left_joint_controller" type="system">
-      <hardware>
-        <plugin>gazebo_ros2_control/GazeboSystem</plugin>
-      </hardware>
-      <joint name="wheel_left_joint">
-        <state_interface name="velocity" />
-        <state_interface name="position" />
-        <command_interface name="velocity" />
-      </joint>
-    </ros2_control>
-  </xacro:if>
 
   <link name="${robot_name}/wheel_left_link">
     <visual>
@@ -157,7 +145,7 @@
     </inertial>
   </link>
 
-  <gazebo reference="wheel_left_link">
+  <gazebo reference="${robot_name}/wheel_left_link">
     <mu1>1.0</mu1>
     <mu2>1.0</mu2>
     <kp>1000000.0</kp>
@@ -176,19 +164,6 @@
     <child
       link="${robot_name}/wheel_right_link"/>
   </joint>
-
-  <xacro:if value="${hardware_type == 'gz_classic'}">
-    <ros2_control name="wheel_right_joint_controller" type="system">
-      <hardware>
-        <plugin>gazebo_ros2_control/GazeboSystem</plugin>
-      </hardware>
-      <joint name="wheel_right_joint">
-        <state_interface name="velocity" />
-        <state_interface name="position" />
-        <command_interface name="velocity" />
-      </joint>
-    </ros2_control>
-  </xacro:if>
 
   <link name="${robot_name}/wheel_right_link">
     <visual>
@@ -224,7 +199,7 @@
     </inertial>
   </link>
 
-  <gazebo reference="wheel_right_link">
+  <gazebo reference="${robot_name}/wheel_right_link">
     <mu1>1.0</mu1>
     <mu2>1.0</mu2>
     <kp>1000000.0</kp>
@@ -232,6 +207,26 @@
     <minDepth>0.001</minDepth>
     <maxVel>1.0</maxVel>
   </gazebo>
+
+  <xacro:if value="${hardware_type == 'gz_sim'}">
+    <ros2_control name="diffdrive_controller" type="system">
+      <hardware>
+        <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+      </hardware>
+      
+      <joint name="wheel_left_joint">
+        <state_interface name="velocity" />
+        <state_interface name="position" />
+        <command_interface name="velocity" />
+      </joint>
+
+      <joint name="wheel_right_joint">
+        <state_interface name="velocity" />
+        <state_interface name="position" />
+        <command_interface name="velocity" />
+      </joint>
+    </ros2_control>
+  </xacro:if>
 
   <joint name="caster_front_joint" type="fixed">
     <origin
@@ -268,7 +263,7 @@
     </inertial>
   </link>
 
-  <gazebo reference="caster_front_link">
+  <gazebo reference="${robot_name}/caster_front_link">
     <mu1>0.0</mu1>
     <mu2>0.0</mu2>
     <kp>1000000.0</kp>
@@ -312,7 +307,7 @@
     </inertial>
   </link>
 
-  <gazebo reference="caster_back_link">
+  <gazebo reference="${robot_name}/caster_back_link">
     <mu1>0.0</mu1>
     <mu2>0.0</mu2>
     <kp>1000000.0</kp>
@@ -347,23 +342,23 @@
     </inertial>
   </link>
 
-  <gazebo reference="gyro_link">
+  <gazebo reference="${robot_name}/gyro_link">
     <sensor name="imu" type="imu">
+      <gz_frame_id>${robot_name}/gyro_link</gz_frame_id>
       <always_on>true</always_on>
       <update_rate>50</update_rate>
       <visualize>false</visualize>
+      <topic>imu</topic>
       <imu>
         <noise>
           <type>gaussian</type>
           <rate>
             <mean>0.0</mean>
             <stddev>0.00000196</stddev>
-            <!-- 0.25 x 0.25 (deg/s) -->
             <bias_mean>0.0</bias_mean>
             <bias_stddev>0.0</bias_stddev>
           </rate>
           <accel>
-            <!-- not used in the plugin and real robot, hence using tutorial values -->
             <mean>0.0</mean>
             <stddev>1.7e-2</stddev>
             <bias_mean>0.1</bias_mean>
@@ -399,7 +394,7 @@
     </inertial>
   </link>
 
-  <gazebo reference="cliff_sensor_left_link">
+  <gazebo reference="${robot_name}/cliff_sensor_left_link">
     <sensor name="cliff_sensor_left" type="ray">
       <always_on>true</always_on>
       <update_rate>50</update_rate>
@@ -449,7 +444,7 @@
     </inertial>
   </link>
 
-  <gazebo reference="cliff_sensor_right_link">
+  <gazebo reference="${robot_name}/cliff_sensor_right_link">
     <sensor name="cliff_sensor_right" type="ray">
       <always_on>true</always_on>
       <update_rate>50</update_rate>
@@ -499,7 +494,7 @@
     </inertial>
   </link>
 
-  <gazebo reference="cliff_sensor_front_link">
+  <gazebo reference="${robot_name}/cliff_sensor_front_link">
     <sensor name="cliff_sensor_front" type="ray">
       <always_on>true</always_on>
       <update_rate>50</update_rate>
@@ -528,36 +523,36 @@
 
   <gazebo>
     <!-- Gazebo ROS Control -->
-    <xacro:if value="${hardware_type == 'gz_classic'}">
-      <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
-        <ros>
-          <namespace>/$(arg robot_name)</namespace>
-        </ros>
-        <robot_param>robot_description</robot_param>
-        <robot_param_node>robot_state_publisher</robot_param_node>
-        <parameters> $(find interbotix_xslocobot_sim)/config/kobuki_version/$(arg robot_model)_controllers.yaml </parameters>
-      </plugin>
-    </xacro:if>
-
     <xacro:if value="${hardware_type == 'gz_ignition'}">
       <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
         <parameters> $(find interbotix_xslocobot_sim)/config/kobuki_version/$(arg robot_model)_controllers.yaml </parameters>
       </plugin>
     </xacro:if>
 
-    <!-- Ground truth pose -->
-    <plugin filename="libgazebo_ros_p3d.so" name="p3d_base_controller">
-      <ros>
-        <remapping>odom:=sim_ground_truth_pose</remapping>
-        <namespace>/$(arg robot_name)</namespace>
-      </ros>
-      <body_name>$(arg robot_name)/base_footprint</body_name>
-      <frame_name>world</frame_name>
-      <update_rate>100.0</update_rate>
-      <xyz_offset>0 0 0</xyz_offset>
-      <rpy_offset>0.0 0.0 0.0</rpy_offset>
-      <gaussian_noise>0</gaussian_noise>
-    </plugin>
+    <xacro:if value="${hardware_type == 'gz_sim'}">
+      <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+        <ros>
+          <namespace>/$(arg robot_name)</namespace>
+          <remapping>/locobot/diffdrive_controller/odom:=/odom</remapping>
+          <remapping>/locobot/diffdrive_controller/cmd_vel_unstamped:=/cmd_vel</remapping>
+        </ros>
+        <parameters>$(find interbotix_xslocobot_sim)/config/kobuki_version/$(arg robot_model)_controllers.yaml</parameters>
+      </plugin>
+    </xacro:if>
+
+    <!-- Ground truth odometry -->
+    <!-- ref: https://github.com/dhanushshettigar/Getting-Started-With-ROS2/wiki/Differential-Drive-Robot-Teleop#2-include-the-vehicle-model-in-the-world-file -->
+    <xacro:if value="${hardware_type == 'gz_sim'}">
+      <plugin
+        filename="gz-sim-odometry-publisher-system"
+        name="gz::sim::systems::OdometryPublisher">
+        <odom_frame>${robot_name}/base_footprint</odom_frame>
+        <robot_base_frame>${robot_name}/base_footprint</robot_base_frame>
+      </plugin>
+
+    </xacro:if>
+
   </gazebo>
 
 </robot>
+

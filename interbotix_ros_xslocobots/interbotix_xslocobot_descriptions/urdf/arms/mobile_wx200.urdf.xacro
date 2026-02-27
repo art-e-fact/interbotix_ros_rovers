@@ -97,8 +97,8 @@
     <child
       link="${robot_name}/shoulder_link"/>
     <dynamics
-      friction="0.1"
-      damping="0.1"/>
+      friction="0.2"
+      damping="1.5"/>
   </joint>
 
   <link name="${robot_name}/shoulder_link">
@@ -153,8 +153,8 @@
     <child
       link="${robot_name}/upper_arm_link"/>
     <dynamics
-      friction="0.1"
-      damping="0.1"/>
+      friction="0.2"
+      damping="1.5"/>
   </joint>
 
   <link name="${robot_name}/upper_arm_link">
@@ -209,8 +209,8 @@
     <child
       link="${robot_name}/forearm_link"/>
     <dynamics
-      friction="0.1"
-      damping="0.1"/>
+      friction="0.2"
+      damping="1.5"/>
   </joint>
 
   <link name="${robot_name}/forearm_link">
@@ -265,8 +265,8 @@
     <child
       link="${robot_name}/wrist_link"/>
     <dynamics
-      friction="0.1"
-      damping="0.1"/>
+      friction="0.2"
+      damping="1.5"/>
   </joint>
 
   <link name="${robot_name}/wrist_link">
@@ -325,8 +325,8 @@
       <child
         link="${robot_name}/gripper_link"/>
       <dynamics
-        friction="0.1"
-        damping="0.1"/>
+        friction="0.2"
+        damping="1.5"/>
     </joint>
 
     <link name="${robot_name}/gripper_link">
@@ -375,7 +375,7 @@
         link="${robot_name}/ee_arm_link"/>
     </joint>
 
-    <link name="${robot_name}/ee_arm_link">
+    <!-- <link name="${robot_name}/ee_arm_link">
       <inertial>
         <mass value="0.001"/>
         <inertia
@@ -386,7 +386,19 @@
           ixz="0"
           iyz="0"/>
       </inertial>
-    </link>
+    </link> -->
+    <link name="${robot_name}/ee_arm_link">
+    <inertial>
+      <mass value="0.05"/>
+      <inertia
+        ixx="0.00005"
+        iyy="0.00005"
+        izz="0.00005"
+        ixy="0"
+        ixz="0"
+        iyz="0"/>
+    </inertial>
+  </link>
 
     <joint name="gripper" type="continuous">
       <axis xyz="1 0 0"/>
@@ -401,8 +413,8 @@
       <child
         link="${robot_name}/gripper_prop_link"/>
       <dynamics
-        friction="0.1"
-        damping="0.1"/>
+        friction="0.2"
+        damping="1.5"/>
     </joint>
 
     <link name="${robot_name}/gripper_prop_link">
@@ -429,7 +441,7 @@
         <origin
           rpy="0 0 ${pi/2}"
           xyz="0.0008460000 -0.0000016817 0.0000420000"/>
-        <mass value="0.00434"/>
+        <mass value="0.03"/>
         <inertia
           ixx="0.0000005923"
           iyy="0.0000011156"
@@ -503,7 +515,7 @@
           link="${robot_name}/fingers_link"/>
       </joint>
 
-      <link name="${robot_name}/fingers_link">
+      <!-- <link name="${robot_name}/fingers_link">
         <inertial>
           <mass value="0.001"/>
           <inertia
@@ -514,7 +526,19 @@
             ixz="0"
             iyz="0"/>
         </inertial>
-      </link>
+      </link> -->
+      <link name="${robot_name}/fingers_link">
+      <inertial>
+        <mass value="0.03"/>
+        <inertia
+          ixx="0.00003"
+          iyy="0.00003"
+          izz="0.00003"
+          ixy="0"
+          ixz="0"
+          iyz="0"/>
+      </inertial>
+    </link>
 
       <!-- If the gripper fingers are being used, add those as well -->
 
@@ -535,8 +559,8 @@
           <child
             link="${robot_name}/left_finger_link"/>
           <dynamics
-            friction="0.1"
-            damping="0.1"/>
+            friction="0.2"
+            damping="1.5"/>
         </joint>
 
         <link name="${robot_name}/left_finger_link">
@@ -591,9 +615,9 @@
           <child
             link="${robot_name}/right_finger_link"/>
           <dynamics
-            friction="0.1"
-            damping="0.1"/>
-          <xacro:unless value="${hardware_type == 'gz_classic'}">
+            friction="0.2"
+            damping="1.5"/>
+          <xacro:unless value="${hardware_type == 'gz_sim'}">
             <mimic
               joint="left_finger"
               multiplier="-1"
@@ -649,7 +673,7 @@
             link="${robot_name}/ee_gripper_link"/>
         </joint>
 
-        <link name="${robot_name}/ee_gripper_link">
+        <!-- <link name="${robot_name}/ee_gripper_link">
           <inertial>
             <mass value="0.001"/>
             <inertia
@@ -661,6 +685,19 @@
               iyz="0"/>
           </inertial>
         </link>
+         -->
+        <link name="${robot_name}/ee_gripper_link">
+        <inertial>
+          <mass value="0.02"/>
+          <inertia
+            ixx="0.00002"
+            iyy="0.00002"
+            izz="0.00002"
+            ixy="0"
+            ixz="0"
+            iyz="0"/>
+        </inertial>
+      </link>
 
       </xacro:if> <!-- show_gripper_fingers -->
 

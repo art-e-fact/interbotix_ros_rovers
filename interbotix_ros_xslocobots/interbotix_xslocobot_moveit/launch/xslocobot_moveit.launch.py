@@ -262,12 +262,12 @@ def launch_setup(context, *args, **kwargs):
         ),
     )
 
-    xslocobot_gz_classic_launch_include = IncludeLaunchDescription(
+    xslocobot_gz_sim_launch_include = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
             PathJoinSubstitution([
                 FindPackageShare('interbotix_xslocobot_sim'),
                 'launch',
-                'xslocobot_gz_classic.launch.py'
+                'xslocobot_gz_sim.launch.py'
             ])
         ]),
         launch_arguments={
@@ -284,7 +284,7 @@ def launch_setup(context, *args, **kwargs):
         }.items(),
         condition=LaunchConfigurationEquals(
             launch_configuration_name='hardware_type',
-            expected_value='gz_classic'
+            expected_value='gz_sim'
         ),
     )
 
@@ -292,7 +292,7 @@ def launch_setup(context, *args, **kwargs):
         move_group_node,
         moveit_rviz_node,
         xslocobot_ros_control_launch_include,
-        xslocobot_gz_classic_launch_include,
+        xslocobot_gz_sim_launch_include,
     ]
 
 
